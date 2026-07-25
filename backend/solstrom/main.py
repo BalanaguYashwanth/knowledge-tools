@@ -49,26 +49,6 @@ embedding_model = OpenAIEmbeddings(
     check_embedding_ctx_length=False,
 )
 
-def _add_documents_in_batches(vector_store: QdrantVectorStore, documents: list[Document]) -> None:
-    """Small batches avoid Qdrant WriteTimeout on cloud upserts."""
-    total = len(documents)
-    for start in range(0, total, EMBED_BATCH_SIZE):
-        batch = documents[start : start + EMBED_BATCH_SIZE]
-        batch_num = start // EMBED_BATCH_SIZE + 1
-        total_batches = (total + EMBED_BATCH_SIZE - 1) // EMBED_BATCH_SIZE
-        print(f"Embedding batch {batch_num}/{total_batches} ({len(batch)} docs)...")
-
-        for attempt in range(1, 4):
-            try:
-                vector_store.add_documents(documents=batch)
-                break
-            except Exception as exc:
-                if attempt == 3:
-                    raise
-                wait = 5 * attempt
-                print(f"Batch failed ({exc}); retrying in {wait}s...")
-                time.sleep(wait)
-
 def create_data_into_quadrant():
     if client.collection_exists(QDRANT_COLLECTION_NAME):
         print(f"Deleting existing collection {QDRANT_COLLECTION_NAME}...")
@@ -80,7 +60,7 @@ def create_data_into_quadrant():
     )
 
     # TODO: hardcoded old path — update to current project path or use relative path
-    with open("/Users/yashwanth/other-projects/AI_ML/solstrom_youtube-chatbot/backend/ideas_v2.json") as f:
+    with open("/Users/yashwanth/other-projects/AI_ML/solstrom_youtube-chatbot/backend/data/ideas_v2.json") as f:
         datas = json.load(f)
 
     documents = []

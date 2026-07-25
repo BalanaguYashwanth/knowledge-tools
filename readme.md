@@ -10,5 +10,3 @@ Building basic youtube chatbot using youtube transcription using youtube-transcr
 ## Building multi rag pipeline (solstrom)
 
 Handle RAG from different datasets, routes to particular dataset based on prompt
-# knowledge-tools
-# knowledge-tools
