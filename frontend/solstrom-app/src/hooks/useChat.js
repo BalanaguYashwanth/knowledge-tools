@@ -5,7 +5,7 @@ const WELCOME_MESSAGE = {
   id: 'welcome',
   role: 'assistant',
   content:
-    "Ask about project ideas, hackathon winners, or both. search for 'NFT ideas', 'Web3 ideas' etc",
+    "Suggest some 'NFT ideas', 'Web3 ideas', 'project ideas' etc",
   timestamp: new Date().toISOString(),
 };
 

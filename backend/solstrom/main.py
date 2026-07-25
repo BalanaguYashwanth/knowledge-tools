@@ -125,9 +125,9 @@ def create_index():
     )
 
 # TODO: do not run ingestion on import — only when executing this file as a script
-if __name__ == "__main__":
-    create_data_into_quadrant()
-    create_index()
+# if __name__ == "__main__":
+#     create_data_into_quadrant()
+#     create_index()
 
 class Idea(BaseModel):
     title: str = Field(description="Title of the idea")
@@ -166,7 +166,7 @@ def process_user_query(user_query: str) -> dict:
     query = ''
     should_filter = []
     must_filter = []
-    print('--query--result----\n', result)
+    # print('--query--result----\n', result)
     for key, value in result.items():
         if not value:
             continue
@@ -192,7 +192,7 @@ def process_user_query(user_query: str) -> dict:
     # TODO: default query fallback when LLM returns empty query string
     if not query:
         query = user_query
-    print('--filters--\n', should_filter, must_filter)
+    # print('\n--filters--\n', should_filter, must_filter)
     retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={
         "k": 2,
         "filter": models.Filter(
@@ -201,9 +201,9 @@ def process_user_query(user_query: str) -> dict:
         )
     })
     contents = retriever.invoke(query)
+    # print('\n--contents-', contents)
     result_json = []
     summary = []
-    content = "Not found any data for the given query"
     if len(contents) > 0:
         for content in contents:
             page_content = content.page_content
@@ -218,16 +218,16 @@ def process_user_query(user_query: str) -> dict:
 
         structured_llm_2 = model.with_structured_output(Ideas)
         prompt_template = ChatPromptTemplate([
-            ('system', 'You are helpful assistant. based on the given content, please give a detailed summary as list of ideas with title and summary'),
+            ('system', 'You are helpful assistant. based on the given content, please give a short summary upto max 300 characters'),
             ('human', 'here is the query {query} and contents {content}')
         ])
-
+        # print('\n--result_json--\n', result_json)
         prompt = prompt_template.invoke({'query': query, 'content': contents})
         summary = structured_llm_2.invoke(prompt)
+        # print('\n--summary--', summary)
 
     return {
         "category": "ideas",
-        "content": content,
         "query": query,
         "filters": {k: v for k, v in result.items() if v},
         "ideas": result_json,
