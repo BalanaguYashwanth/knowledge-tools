@@ -16,6 +16,9 @@ from typing import Literal, Annotated, TypedDict, Optional
 from datetime import date
 
 load_dotenv()
+
+# from hackathon_rag.hackathon_rag import  create_collection_in_vector_store, create_index_in_vector_store
+
 QDRANT_URL = os.getenv("QDRANT_URL")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -27,6 +30,8 @@ EMBEDDING_DIMENSION = int(os.getenv("EMBEDDING_DIMENSION", "384"))
 QDRANT_COLLECTION_NAME = os.getenv("QDRANT_COLLECTION_NAME", "solstom_minilm")
 EMBED_BATCH_SIZE = int(os.getenv("EMBED_BATCH_SIZE", "10"))
 
+# create_collection_in_vector_store()
+# create_index_in_vector_store()
 client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY,

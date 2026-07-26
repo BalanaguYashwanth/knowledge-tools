@@ -23,17 +23,14 @@ export const DATASETS = [
     description: 'Winning projects from Solana hackathons with team and prize details.',
     collection: 'hackathon_winners_rag',
     data: hackathonWinnersData,
-    getPreview: (record) => {
-      const winner = record.prizeGroups?.[0]?.winners?.[0];
-      return {
-        title: winner?.name ?? 'Unknown project',
-        hackathon: record.hackathon?.name,
-        prize: record.prizeGroups?.[0]?.name,
-        country: winner?.country,
-        tracks: winner?.tracks?.join(', '),
-      };
-    },
-    searchFields: ['name', 'hackathon', 'prize'],
+    getPreview: (record) => ({
+      title: record.title ?? 'Unknown project',
+      hackathon: record.hackathon_name,
+      prize: record.prize_name,
+      country: record.country,
+      tracks: record.tracks?.join(', '),
+    }),
+    searchFields: ['title', 'hackathon_name', 'prize_name', 'country', 'tracks'],
   },
 ];
 

@@ -8,6 +8,8 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from solstrom.main import process_user_query
+from solstrom.hackathon_rag.hackathon_rag import rag_hackathon_winners
+from conditional_rag import decision_chain
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -47,7 +49,7 @@ async def health_check():
 @limiter.limit("10/minute")
 async def chat(request: Request, body: ChatRequest):
     try:
-        result = process_user_query(body.message.strip())
+        result = decision_chain(body.message.strip())
         return ChatResponse(success=True, data=result)
 
     except ValueError as exc:

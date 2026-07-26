@@ -4,8 +4,7 @@ import { API_BASE_URL } from '../constants/datasets';
 const WELCOME_MESSAGE = {
   id: 'welcome',
   role: 'assistant',
-  content:
-    "Suggest some 'NFT ideas', 'Web3 ideas', 'project ideas' etc",
+  content: "Search for 'NFT ideas', 'hackathon winners', etc",
   timestamp: new Date().toISOString(),
 };
 
@@ -42,17 +41,8 @@ export function useChat() {
 
       const responseData = await response.json();
       const data = responseData.data;
-      console.log('---ai--data---',responseData.data);
-      let assistantMessage  = {};
-      if (data?.category === 'ideas') {
-        assistantMessage = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          ideas: data?.ideas || [],
-          summary: data?.summary || '',
-          timestamp: new Date().toISOString(),
-        };
-      }
+      const assistantMessage = buildAssistantMessage(data);
+
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
       setError(
@@ -81,6 +71,36 @@ export function useChat() {
   return { messages, isLoading, error, sendMessage, clearChat };
 }
 
+function buildAssistantMessage(data) {
+  const base = {
+    id: `assistant-${Date.now()}`,
+    role: 'assistant',
+    category: data?.category,
+    timestamp: new Date().toISOString(),
+  };
+
+  if (data?.category === 'ideas') {
+    return {
+      ...base,
+      ideas: data.ideas || [],
+      summary: data.summary || null,
+    };
+  }
+
+  if (data?.category === 'hackathons') {
+    return {
+      ...base,
+      winners: data.winners || [],
+      summary: data.summary || null,
+    };
+  }
+
+  return {
+    ...base,
+    content: data?.message || 'No matching results found for this query.',
+  };
+}
+
 function inferDemoResponse(query) {
   const lower = query.toLowerCase();
   const mentionsIdeas =
@@ -92,7 +112,8 @@ function inferDemoResponse(query) {
     lower.includes('hackathon') ||
     lower.includes('winner') ||
     lower.includes('colosseum') ||
-    lower.includes('cypherpunk');
+    lower.includes('cypherpunk') ||
+    lower.includes('breakout');
 
   if (mentionsIdeas && mentionsHackathon) {
     return (

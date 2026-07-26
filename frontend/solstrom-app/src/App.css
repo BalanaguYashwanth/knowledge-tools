@@ -298,6 +298,20 @@
   padding: 0.15rem 0;
 }
 
+.chat-message__link {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+}
+
+.chat-message__link a {
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.chat-message__link a:hover {
+  color: var(--color-accent-hover);
+}
+
 .chat-panel__typing {
   display: flex;
   gap: 0.3rem;
