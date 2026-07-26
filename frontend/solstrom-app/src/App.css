@@ -111,6 +111,10 @@
   height: calc(100dvh - var(--header-height));
 }
 
+.playground:has(.data-panel--collapsed) {
+  grid-template-columns: 1fr 52px;
+}
+
 /* ── Chat Panel ───────────────────────────────────────────────── */
 
 .chat-panel {
@@ -408,11 +412,37 @@
   background: var(--color-surface);
   overflow: hidden;
   min-height: 0;
+  border-left: 1px solid var(--color-border-subtle);
+}
+
+.data-panel--collapsed {
+  flex: 0 0 auto;
 }
 
 .data-panel__header {
   padding: 1rem 1.25rem 0.75rem;
   flex-shrink: 0;
+}
+
+.data-panel--collapsed .data-panel__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 1rem 0.35rem;
+  gap: 0.75rem;
+}
+
+.data-panel__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.data-panel--collapsed .data-panel__title-row {
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .data-panel__title {
@@ -422,6 +452,42 @@
   color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.data-panel--collapsed .data-panel__title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.75rem;
+}
+
+.data-panel__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.data-panel__toggle:hover {
+  color: var(--color-text-primary);
+  background: var(--color-surface-hover);
+  border-color: var(--color-text-muted);
+}
+
+.data-panel__chevron {
+  transition: transform var(--transition-normal);
+}
+
+/* Open: points right — collapse toward the right */
+.data-panel--open .data-panel__chevron {
+  transform: rotate(180deg);
 }
 
 .data-panel__subtitle {
@@ -1046,6 +1112,38 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
     height: calc(100dvh - 100px);
+  }
+
+  .playground:has(.data-panel--collapsed) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 48px;
+  }
+
+  .data-panel--collapsed .data-panel__header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .data-panel--collapsed .data-panel__title-row {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .data-panel--collapsed .data-panel__title {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .data-panel--collapsed .data-panel__chevron {
+    transform: rotate(-90deg);
+  }
+
+  .data-panel--open .data-panel__chevron {
+    transform: rotate(90deg);
   }
 
   .chat-panel {
